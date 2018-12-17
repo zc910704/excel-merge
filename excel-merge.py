@@ -6,8 +6,6 @@ import pandas as pd
 import numpy as np
 import re
 import os
-import chardet
-import sys
 
 result_list =[]
 
@@ -16,10 +14,9 @@ BASE_DIR = os.getcwd()
 
 
 def verify_file(path):
-    sys.getdefaultencoding()
-    # if re.match(u'分部分项', str(path)):
-    print(str(chardet.detect(path)))
-    if path.find('分部分项') + 1 :
+    reg = re.compile('分部分项')
+    if reg.search(path):
+    # if path.find('分部分项') + 1 :
         return True
     return False
 
@@ -47,4 +44,7 @@ def traverse(BASE_DIR):
             traverse(tmp_path)
 
 traverse(BASE_DIR)
-print(result_list)
+
+df = pd.concat(result_list).sort_values(by="项目编码")
+
+df.to_excel('./out.xls')
